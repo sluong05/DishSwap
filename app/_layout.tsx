@@ -1,29 +1,46 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import 'react-native-reanimated';
+import { Stack } from "expo-router";
+import { Image, View } from "react-native";
+import './globals.css';
+import {RecipeProvider} from "@/contexts/RecipeContext";
 
-import { useColorScheme } from '@/hooks/useColorScheme';
+function HeaderTitle() {
+  return (
+      <View className="flex-row items-center">
+        <Image
+            source={require("../assets/logos/DishSwap.png")}
+            style={{ width: 120, height: 28, resizeMode: "contain" }}
+        />
+      </View>
+  );
+}
+
+function HeaderRight() {
+  return (
+      <View className="mr-2">
+        <Image
+            source={require("../assets/icons/gear.png")}
+            style={{ width: 24, height: 24 }}
+        />
+      </View>
+  );
+}
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
-  const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-  });
-
-  if (!loaded) {
-    // Async font loading only occurs in development.
-    return null;
-  }
-
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
+      <RecipeProvider>
+          <Stack
+              screenOptions={{
+                headerShown: true,
+                headerTitle: () => <HeaderTitle />,
+                headerRight: () => <HeaderRight />,
+                headerStyle: { backgroundColor: "#ffffff" },
+                headerShadowVisible: false,
+              }}
+          >
+            {/* Tabs live under this stack */}
+            <Stack.Screen name="(tabs)" options={{ headerTitle: () => <HeaderTitle /> }} />
+            {/* Keep other screens (recipe/[id], user/[username]) defaulting to same header */}
+          </Stack>
+      </RecipeProvider>
   );
 }

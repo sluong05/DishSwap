@@ -1,0 +1,13 @@
+This has all the details of what you need for the app
+
+Necessary:
+- Title
+- Category
+- Difficulty
+- Ingredients
+- Steps/Instructions
+- Recipe Photo
+
+Extras:
+- Servings
+- Calories/Macros

@@ -1,20 +1,19 @@
-import { FlatList, View, Text } from "react-native";
+import {View, Text, FlatList, TouchableOpacity} from "react-native";
 import RecipeCard from "../../components/RecipeCard";
 import { useRecipes } from "@/contexts/RecipeContext";
 
 
-
-export default function Feed() {
+export default function Discover() {
     const { recipes } = useRecipes();
     return (
-        <View className="flex-1 bg-primary-bg ">
+        <View className="flex-1 bg-primary-bg">
             <FlatList
                 data={recipes}
                 keyExtractor={(item) => item.id}
                 contentContainerStyle={{ padding: 16 }}
                 ListHeaderComponent={
                     <View className="mb-4">
-                        <Text className="text-2xl font-extrabold text-gray-900">Your Feed</Text>
+                        <Text className="text-2xl font-extrabold text-gray-900">Discover new dishes</Text>
                     </View>
                 }
                 ListEmptyComponent={
@@ -26,8 +25,7 @@ export default function Feed() {
                 }
                 ItemSeparatorComponent={() => <View className="h-4" />}
                 renderItem={({ item }) => (
-                    <RecipeCard title={item.title} image={item.image} author={item.author} description={item.description}
-                                time={item.time} difficulty={item.difficulty} servings={item.servings} />
+                    <RecipeCard title={item.title} image={item.image} author={item.author} description={item.description} time={item.time} />
                 )}
                 showsVerticalScrollIndicator={false}
             />
