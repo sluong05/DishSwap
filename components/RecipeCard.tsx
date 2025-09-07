@@ -1,6 +1,8 @@
 import { View, Text, Image, TouchableOpacity } from "react-native";
+import { useRouter } from "expo-router";
 
 type Props = {
+    id: string;
     title: string;
     author?: string;
     image?: string;
@@ -9,12 +11,13 @@ type Props = {
     steps?: string[];
     servings?: string | number;
     time?: number;            // minutes
-    difficulty?: "Easy" | "Medium" | "Hard" | string;
+    difficulty?: "Easy" | "Medium" | "Hard" | "Unknown" | string;
     calories?: number;
     onPress?: () => void;     // optional tap handler
 };
 
 export default function RecipeCard({
+    id,
     title, //these are the properties of the passed in object, these are expected to be unpacked from that object
     author = "Unknown", //optional property that passes in unknown if no author
     image,
@@ -27,8 +30,13 @@ export default function RecipeCard({
     description,
 }: Props)
 {
+    const router = useRouter();
+
     return (
-        <TouchableOpacity className="active:opacity-80">
+        <TouchableOpacity
+            onPress={() => router.push({ pathname: "/recipe/[id]", params: { id } })}
+            className="active:opacity-50"
+        >
             <View className="bg-white rounded-2xl overflow-hidden ">
                 <View className="flex-row items-center justify-between px-4 pt-3 pb-4 border-b border-gray-100">
                     <View className="flex-row items-center">
@@ -41,7 +49,7 @@ export default function RecipeCard({
                 {image ? (
                     <Image source={{ uri: image }} className="w-full h-60" />
                 ) : (
-                    <View className="w-full h-40 bg-gray-200" />
+                    <View className="w-full h-full bg-gray-200" />
                 )}
 
                 {/* Title */}
@@ -50,7 +58,7 @@ export default function RecipeCard({
                     {/*This will input a prop of "Description"*/}
                     <Text>{description}</Text>
 
-                    {/*This will show difficulty with respected colors*/}
+                    {/*This will show difficulty with respective colors*/}
                     <View className="flex-row mt-2">
                         <View className={`px-2.5 py-1 rounded-full mr-2 ${difficulty === "Easy"
                             ? "bg-emerald-100"
@@ -58,15 +66,20 @@ export default function RecipeCard({
                             ? "bg-yellow-100"
                             : difficulty === "Hard"
                             ? "bg-red-100"
-                            : "text-gray-700"}`}>
+                            : difficulty === "Unknown"
+                            ? "text-gray-200"
+                            : "text-gray-200"}`}>
 
                             <Text className={`text-xs font-semibold ${difficulty === "Easy"
                                 ? "text-emerald-500"
                                 : difficulty === "Medium"
                                 ? "text-yellow-500"
                                 : difficulty === "Hard"
-                                ? "text-red-500"
-                                : "text-gray-700"}`}>{difficulty}
+                                ? "text-red-500" 
+                                : difficulty === "Unknown"
+                                ? "text-gray-700" 
+                                : "text-gray-700"
+                                }`}>{difficulty}
                             </Text>
                         </View>
                         <View className="bg-blue-100 px-2.5 py-1 rounded-full">

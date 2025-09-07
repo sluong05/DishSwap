@@ -7,9 +7,10 @@ type Recipe = {
     image?: string;
     description?: string;
     ingredients?: string[];
+    steps?: string[];
     servings?: string | number;
     time?: number;            // minutes
-    difficulty?: "Easy" | "Medium" | "Hard" | string;
+    difficulty?: "Easy" | "Medium" | "Hard" | "Unknown" | string;
     calories?: number;
 };
 

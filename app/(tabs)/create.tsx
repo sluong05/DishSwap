@@ -1,16 +1,19 @@
-import { View, Text, TextInput, ScrollView, TouchableOpacity, Image } from "react-native";
+import {
+    View,
+    Text,
+    TextInput,
+    ScrollView,
+    TouchableOpacity,
+    Image,
+    Platform,
+    ActionSheetIOS,
+    Alert
+} from "react-native";
 import { useState } from "react";
 import { useRecipes } from "@/contexts/RecipeContext";
-
-
-//replace the value of certain index of array
-const updateAt = <T,>(arr: T[], index: number, value: T): T[] =>
-    arr.map((item, i) => (i === index ? value : item));
-
-//remove certain index of array
-const removeAt = <T,>(arr: T[], index: number): T[] =>
-    arr.filter((_, i) => i !== index);
-
+import * as ImagePicker from "expo-image-picker";
+import {updateAt, removeAt} from "@/utils/array";
+import { validateRecipe } from "@/utils/validation";
 
 
 export default function Create() {
@@ -26,25 +29,88 @@ export default function Create() {
 
     const [difficulty, setDifficulty] = useState("");
 
+    const [photo, setPhoto] = useState<string | null>(null);
+
     const { addRecipe } = useRecipes();
 
+    {/*To pick an image*/}
+    async function pickImageFromLibrary(setPhoto: (uri: string) => void) {
+        const perm = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (!perm.granted) { alert("We need access to your photo library to add a photo."); return; }
+
+        const res = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: "images",
+            allowsEditing: true,
+            aspect: [2, 1],
+            quality: 1,
+        });
+
+        if (!res.canceled && res.assets?.[0]?.uri) setPhoto(res.assets[0].uri);
+    }
+    {/*To take an image*/}
+    async function takePhotoWithCamera(setPhoto: (uri: string) => void) {
+        const perm = await ImagePicker.requestCameraPermissionsAsync();
+        if (!perm.granted) { alert("We need access to your camera to take a photo."); return; }
+
+        const res = await ImagePicker.launchCameraAsync({
+            allowsEditing: true,
+            aspect: [4, 3],
+            quality: 1,
+        });
+
+        if (!res.canceled && res.assets?.[0]?.uri) setPhoto(res.assets[0].uri);
+    }
+    {/*To give option to pick or take image*/}
+    function openPhotoSourceSheet(setPhoto: (uri: string) => void) {
+        const ask = () => {
+            if (Platform.OS === "ios") {
+                ActionSheetIOS.showActionSheetWithOptions(
+                    {
+                        title: "Add Photo",
+                        options: ["Take Photo", "Choose from Library", "Cancel"],
+                        cancelButtonIndex: 2,
+                    },
+                    async (i) => {
+                        if (i === 0) await takePhotoWithCamera(setPhoto);
+                        if (i === 1) await pickImageFromLibrary(setPhoto);
+                    }
+                );
+            } else {
+                Alert.alert(
+                    "Add Photo",
+                    "",
+                    [
+                        { text: "Take Photo", onPress: () => takePhotoWithCamera(setPhoto) },
+                        { text: "Choose from Library", onPress: () => pickImageFromLibrary(setPhoto) },
+                        { text: "Cancel", style: "cancel" },
+                    ],
+                    { cancelable: true }
+                );
+            }
+        };
+        ask();
+    }
+
     function handlePublish() {
+        const valid = validateRecipe({
+            title, description, ingredients: ingredientList, steps: stepList, portion, time, difficulty, photo,
+        });
+        if (!valid.ok) return Alert.alert(valid.title, valid.message);
+
         addRecipe({
             title,
             description,
             author: "You",
-            image: "https://picsum.photos/400/300", // placeholder
+            image: photo!,
             time: Number(time),
-            difficulty,
+            difficulty: difficulty,
             servings: portion,
+            steps: stepList,
+            ingredients: ingredientList,
         });
-        setTitle("");
-        setDescription("");
-        setIngredientList([""]);
-        setStepList([""]);
-        setPortion("");
-        setTime("");
-        setDifficulty("");
+        setTitle(""); setDescription(""); setIngredientList([""]); setStepList([""]);
+        setPortion(""); setTime(""); setDifficulty(""); setPhoto(null);
+        Alert.alert("Success!", "Your recipe has been published.");
     }
 
 
@@ -163,33 +229,52 @@ export default function Create() {
             {/* Difficulty */}
             <Text className="font-semibold mb-4">Difficulty</Text>
             <View className="flex-row items-center justify-between mb-4">
-                <TouchableOpacity
-                    onPress={() => setDifficulty("Easy")}
-                    className="bg-emerald-100 w-32 px-2.5 py-1 rounded-full mr-2 items-center"
-                >
-                    <Text className="text-emerald-500 text-xl font-semibold">Easy</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    onPress={() => setDifficulty("Medium")}
-                    className="bg-yellow-100 w-32 px-2.5 py-1 rounded-full mr-2 items-center"
-                >
-                    <Text className="text-yellow-500 text-xl font-semibold">Medium</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    onPress={() => setDifficulty("Hard")}
-                    className="bg-red-100 w-32 px-2.5 py-1 rounded-full mr-2 items-center"
-                >
-                    <Text className="text-red-500 text-xl font-semibold ">Hard</Text>
-                </TouchableOpacity>
+                {["Easy", "Medium", "Hard"].map((level) => {
+                    const isSelected = difficulty === level;
+
+                    // pick colors depending on level
+                    const colors: Record<string, { bg: string; text: string; selectedBg: string; selectedText: string }> = {
+                        Easy:   { bg: "bg-emerald-100", text: "text-emerald-500", selectedBg: "bg-emerald-500", selectedText: "text-white" },
+                        Medium: { bg: "bg-yellow-100", text: "text-yellow-500", selectedBg: "bg-yellow-500", selectedText: "text-white" },
+                        Hard:   { bg: "bg-red-100",    text: "text-red-500",    selectedBg: "bg-red-500",    selectedText: "text-white" },
+                    };
+
+                    return (
+                        <TouchableOpacity
+                            key={level}
+                            onPress={() => setDifficulty(level)}
+                            className={`w-32 px-2.5 py-1 rounded-full mr-2 items-center 
+                            ${isSelected ? colors[level].selectedBg : colors[level].bg}`}
+                        >
+                            <Text className={`text-xl font-semibold 
+                            ${isSelected ? colors[level].selectedText : colors[level].text}`}>
+                                {level}
+                            </Text>
+                        </TouchableOpacity>
+                    );
+                })}
             </View>
 
 
 
-            {/* Photo Upload (mock placeholder) */}
+            {/* Photo Upload */}
             <Text className="font-semibold mb-1">Photo</Text>
-            <TouchableOpacity className="bg-white rounded-xl h-40 items-center justify-center mb-6">
-                <Text className="text-gray-500">+ Add Photo</Text>
+            <TouchableOpacity
+                className="bg-white rounded-xl h-80 items-center justify-center mb-2 overflow-hidden"
+                onPress={() => openPhotoSourceSheet((uri) => setPhoto(uri))}
+                activeOpacity={0.8}
+            >
+                {photo ? (
+                    <Image
+                        source={{ uri: photo }} style={{ width: "100%", height: 320 }}
+                        resizeMode="cover"
+                    />
+                ) : (
+                    <Text className="text-gray-500">+ Add Photo</Text>
+                )}
             </TouchableOpacity>
+
+
 
             {/* Submit Button */}
             <TouchableOpacity

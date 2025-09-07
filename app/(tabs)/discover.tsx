@@ -25,7 +25,8 @@ export default function Discover() {
                 }
                 ItemSeparatorComponent={() => <View className="h-4" />}
                 renderItem={({ item }) => (
-                    <RecipeCard title={item.title} image={item.image} author={item.author} description={item.description} time={item.time} />
+                    <RecipeCard id={item.id} title={item.title} image={item.image} author={item.author} description={item.description}
+                                time={item.time} difficulty={item.difficulty} servings={item.servings} />
                 )}
                 showsVerticalScrollIndicator={false}
             />

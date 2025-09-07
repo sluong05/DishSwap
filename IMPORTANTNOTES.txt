@@ -1,0 +1,2 @@
+1. PHOTO PICKER WORKS, please just test it out using expo go for full functionality
+2. BUTTONS ON EXPO GO WORKS, please hold the screen with 3 fingers for a little bit of time and it will work
