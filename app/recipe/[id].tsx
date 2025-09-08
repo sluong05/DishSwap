@@ -7,7 +7,8 @@ export default function RecipeDetails() {
     const router = useRouter();
 
     const { id } = useLocalSearchParams<{ id: string }>();
-    const { recipes } = useRecipes();
+    const { recipes, isSaved, toggleSave } = useRecipes();   // <-- use save helpers
+
 
     const recipe = recipes.find(r => r.id === id);
 
@@ -18,6 +19,8 @@ export default function RecipeDetails() {
             </View>
         );
     }
+
+    const saved = isSaved(id!);
 
     return (
         <>
@@ -73,10 +76,33 @@ export default function RecipeDetails() {
                 )}
             </ScrollView>
 
+            {/* Footer actions */}
             <View className="px-4 pb-8 bg-primary-bg">
-                <TouchableOpacity onPress={() => router.back()} className="bg-[#1B57BF] py-3 rounded-lg items-center">
-                    <Text className="text-white text-lg font-bold">Back</Text>
-                </TouchableOpacity>
+                <View className="flex-row gap-3">
+                    {/* SAVE / UNSAVE */}
+                    <TouchableOpacity
+                        onPress={() => toggleSave(id!)}
+                        accessibilityRole="button"
+                        accessibilityLabel={saved ? "Unsave recipe" : "Save recipe"}
+                        className={`flex-1 py-3 rounded-lg items-center ${
+                            saved ? "bg-gray-200" : "bg-[#1B57BF]"
+                        }`}
+                    >
+                        <Text className={`text-lg font-bold ${saved ? "text-gray-900" : "text-white"}`}>
+                            {saved ? "Saved ✓" : "Save"}
+                        </Text>
+                    </TouchableOpacity>
+
+                    {/* BACK */}
+                    <TouchableOpacity
+                        onPress={() => router.back()}
+                        accessibilityRole="button"
+                        accessibilityLabel="Go back"
+                        className="flex-1 bg-gray-900 py-3 rounded-lg items-center"
+                    >
+                        <Text className="text-white text-lg font-bold">Back</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
         </>
     );
