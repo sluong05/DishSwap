@@ -40,6 +40,11 @@ export default function RootLayout() {
             {/* Tabs live under this stack */}
             <Stack.Screen name="(tabs)" options={{ headerTitle: () => <HeaderTitle /> }} />
             {/* Keep other screens (recipe/[id], user/[username]) defaulting to same header */}
+
+              <Stack.Screen
+                  name="recipe/[id]"
+                  options={{ headerBackVisible: false }}
+              />
           </Stack>
       </RecipeProvider>
   );

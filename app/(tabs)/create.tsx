@@ -129,6 +129,7 @@ export default function Create() {
                 value={title}
                 onChangeText={setTitle}
                 placeholder="e.g., Garlic Butter Salmon"
+                placeholderTextColor="#9CA3AF"
                 className="bg-white rounded-xl px-4 py-3 mb-4"
             />
 
@@ -138,6 +139,7 @@ export default function Create() {
                 value={description}
                 onChangeText={setDescription}
                 placeholder="Short description..."
+                placeholderTextColor="#9CA3AF"
                 multiline
                 className="bg-white rounded-xl px-4 py-3 mb-4 h-20"
             />
@@ -159,6 +161,7 @@ export default function Create() {
                             value={val}
                             onChangeText={(t) => setIngredientList((prev) => updateAt(prev, i, t))}
                             placeholder={`Ingredient ${i + 1}`}
+                            placeholderTextColor="#9CA3AF"
                             className="flex-1 bg-white rounded-xl px-4 py-3"
                         />
                         <TouchableOpacity
@@ -198,6 +201,7 @@ export default function Create() {
                             value={val}
                             onChangeText={(t) => setStepList((prev) => updateAt(prev, i, t))}
                             placeholder={`Describe step ${i + 1}...`}
+                            placeholderTextColor="#9CA3AF"
                             multiline
                             className="bg-white rounded-xl px-4 py-3"
                         />
@@ -215,6 +219,7 @@ export default function Create() {
                         value={portion}
                         onChangeText={setPortion}
                         placeholder="e.g., 4"
+                        placeholderTextColor="#9CA3AF"
                         keyboardType="numeric"
                         className="bg-white rounded-xl px-4 py-3"
                     />
@@ -225,6 +230,7 @@ export default function Create() {
                         value={time}
                         onChangeText={setTime}
                         placeholder="e.g., 35"
+                        placeholderTextColor="#9CA3AF"
                         keyboardType="numeric"
                         className="bg-white rounded-xl px-4 py-3"
                     />
