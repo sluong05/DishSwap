@@ -11,7 +11,7 @@ type Props = {
     steps?: string[];
     servings?: string | number;
     time?: number;            // minutes
-    difficulty?: "Easy" | "Medium" | "Hard" | "Unknown" | string;
+    difficulty?: "Easy" | "Medium" | "Hard" | string;
     calories?: number;
     onPress?: () => void;     // optional tap handler
 };
@@ -24,7 +24,7 @@ export default function RecipeCard({
     ingredients,
     servings,
     time = 0,
-    difficulty = "Unknown",
+    difficulty,
     steps,
     calories,
     description,
@@ -66,8 +66,6 @@ export default function RecipeCard({
                             ? "bg-yellow-100"
                             : difficulty === "Hard"
                             ? "bg-red-100"
-                            : difficulty === "Unknown"
-                            ? "text-gray-200"
                             : "text-gray-200"}`}>
 
                             <Text className={`text-xs font-semibold ${difficulty === "Easy"
@@ -75,14 +73,12 @@ export default function RecipeCard({
                                 : difficulty === "Medium"
                                 ? "text-yellow-500"
                                 : difficulty === "Hard"
-                                ? "text-red-500" 
-                                : difficulty === "Unknown"
-                                ? "text-gray-700" 
+                                ? "text-red-500"
                                 : "text-gray-700"
                                 }`}>{difficulty}
                             </Text>
                         </View>
-                        <View className="bg-blue-100 px-2.5 py-1 rounded-full">
+                        <View className="bg-blue-100 px-2.5 py-1 mr-2 rounded-full">
                             <Text className="text-blue-700 text-xs font-semibold">{time} mins</Text>
                         </View>
                         <View className="bg-purple-100 px-2.5 py-1 rounded-full">

@@ -27,13 +27,13 @@ export default function Create() {
     const [portion, setPortion] = useState("");
     const [time, setTime] = useState("");
 
-    const [difficulty, setDifficulty] = useState("");
+    const [difficulty, setDifficulty] = useState("")
 
     const [photo, setPhoto] = useState<string | null>(null);
 
     const { addRecipe } = useRecipes();
 
-    {/*To pick an image*/}
+    //To pick an image
     async function pickImageFromLibrary(setPhoto: (uri: string) => void) {
         const perm = await ImagePicker.requestMediaLibraryPermissionsAsync();
         if (!perm.granted) { alert("We need access to your photo library to add a photo."); return; }
@@ -47,7 +47,7 @@ export default function Create() {
 
         if (!res.canceled && res.assets?.[0]?.uri) setPhoto(res.assets[0].uri);
     }
-    {/*To take an image*/}
+    //To take an image
     async function takePhotoWithCamera(setPhoto: (uri: string) => void) {
         const perm = await ImagePicker.requestCameraPermissionsAsync();
         if (!perm.granted) { alert("We need access to your camera to take a photo."); return; }
@@ -90,6 +90,11 @@ export default function Create() {
         };
         ask();
     }
+
+    // If all of these properties are true then you can publish the app
+    const canPublish =
+        (title.trim() && description.trim() && portion.trim() && time.toString().trim() && difficulty && photo
+            && ingredientList.some(i => i.trim()) && stepList.some(s => s.trim()));
 
     function handlePublish() {
         const valid = validateRecipe({
@@ -277,9 +282,11 @@ export default function Create() {
 
 
             {/* Submit Button */}
+
             <TouchableOpacity
-                className="bg-[#1B57BF] rounded-xl py-4"
+                className={`rounded-xl py-4 ${canPublish ? "bg-[#1B57BF]" : "bg-gray-300"}`}
                 onPress={handlePublish}
+                disabled={!canPublish}
             >
                 <Text className="text-center text-white font-bold text-lg">Publish Recipe</Text>
             </TouchableOpacity>

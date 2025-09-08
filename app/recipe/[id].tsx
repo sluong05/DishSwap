@@ -1,9 +1,11 @@
 // app/recipe/[id].tsx
-import { View, Text, Image, ScrollView } from "react-native";
-import { useLocalSearchParams, Stack } from "expo-router";
+import { View, Text, Image, ScrollView, TouchableOpacity} from "react-native";
+import { useLocalSearchParams, Stack, useRouter } from "expo-router";
 import { useRecipes } from "@/contexts/RecipeContext";
 
 export default function RecipeDetails() {
+    const router = useRouter();
+
     const { id } = useLocalSearchParams<{ id: string }>();
     const { recipes } = useRecipes();
 
@@ -35,12 +37,12 @@ export default function RecipeDetails() {
                 <Text className="text-gray-600 mb-2">By @{recipe.author ?? "Unknown"}</Text>
                 <View className="flex-row gap-2 mb-4">
                     {recipe.difficulty ? <Text className={`px-2 py-1 rounded-full ${recipe.difficulty === "Easy"
-                            ? "bg-emerald-100 text-emerald-700 "
-                            : recipe.difficulty === "Medium"
+                        ? "bg-emerald-100 text-emerald-700 "
+                        : recipe.difficulty === "Medium"
                             ? "bg-yellow-100 text-yellow-700"
                             : recipe.difficulty === "Hard"
-                            ? "bg-red-100 text-red-700"
-                            : "text-gray-700"}`}> {recipe.difficulty} </Text> : null}
+                                ? "bg-red-100 text-red-700"
+                                : "text-gray-700"}`}> {recipe.difficulty} </Text> : null}
                     {recipe.time ? <Text className="px-2 py-1 rounded-full bg-blue-100 text-blue-700"> {recipe.time} minutes </Text> : null}
                     {recipe.servings ? <Text className="px-2 py-1 rounded-full bg-purple-100 text-purple-700"> {recipe.servings} servings </Text> : null}
                 </View>
@@ -70,6 +72,12 @@ export default function RecipeDetails() {
                     <Text className="text-gray-600">No steps provided.</Text>
                 )}
             </ScrollView>
+
+            <View className="px-4 pb-8 bg-primary-bg">
+                <TouchableOpacity onPress={() => router.back()} className="bg-[#1B57BF] py-3 rounded-lg items-center">
+                    <Text className="text-white text-lg font-bold">Back</Text>
+                </TouchableOpacity>
+            </View>
         </>
     );
 }
