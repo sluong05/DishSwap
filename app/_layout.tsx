@@ -2,13 +2,15 @@ import { Stack } from "expo-router";
 import { Image, View } from "react-native";
 import './globals.css';
 import {RecipeProvider} from "@/contexts/RecipeContext";
+import { Ionicons } from "@expo/vector-icons";
+
 
 function HeaderTitle() {
   return (
       <View className="flex-row items-center">
         <Image
             source={require("../assets/logos/DishSwap.png")}
-            style={{ width: 120, height: 28, resizeMode: "contain" }}
+            style={{ width: 240, height: 56, resizeMode: "contain" }}
         />
       </View>
   );
@@ -17,10 +19,7 @@ function HeaderTitle() {
 function HeaderRight() {
   return (
       <View className="mr-2">
-        <Image
-            source={require("../assets/icons/gear.png")}
-            style={{ width: 24, height: 24 }}
-        />
+          <Ionicons name="settings" size={24} color="grey" /> {/*very far down the road this will be a touchable opacity */}
       </View>
   );
 }

@@ -1,3 +1,1 @@
-1. Solve the problem with the id.tsx screen where the scrollview does not allow you to see the content at the bottom of the page
-2. Design a better logo that is transparent
-3. Start picking out what to do for backend
+1. Start picking out what to do for backend
