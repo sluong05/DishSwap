@@ -17,18 +17,18 @@ type Props = {
 };
 
 export default function RecipeCard({
-    id,
-    title, //these are the properties of the passed in object, these are expected to be unpacked from that object
-    author = "Unknown", //optional property that passes in unknown if no author
-    image,
-    ingredients,
-    servings,
-    time = 0,
-    difficulty,
-    steps,
-    calories,
-    description,
-}: Props)
+                                       id,
+                                       title, //these are the properties of the passed in object, these are expected to be unpacked from that object
+                                       author = "Unknown", //optional property that passes in unknown if no author
+                                       image,
+                                       ingredients,
+                                       servings,
+                                       time = 0,
+                                       difficulty,
+                                       steps,
+                                       calories,
+                                       description,
+                                   }: Props)
 {
     const router = useRouter();
 
@@ -63,19 +63,19 @@ export default function RecipeCard({
                         <View className={`px-2.5 py-1 rounded-full mr-2 ${difficulty === "Easy"
                             ? "bg-emerald-100"
                             : difficulty === "Medium"
-                            ? "bg-yellow-100"
-                            : difficulty === "Hard"
-                            ? "bg-red-100"
-                            : "text-gray-200"}`}>
+                                ? "bg-yellow-100"
+                                : difficulty === "Hard"
+                                    ? "bg-red-100"
+                                    : "text-gray-200"}`}>
 
                             <Text className={`text-xs font-semibold ${difficulty === "Easy"
                                 ? "text-emerald-500"
                                 : difficulty === "Medium"
-                                ? "text-yellow-500"
-                                : difficulty === "Hard"
-                                ? "text-red-500"
-                                : "text-gray-700"
-                                }`}>{difficulty}
+                                    ? "text-yellow-500"
+                                    : difficulty === "Hard"
+                                        ? "text-red-500"
+                                        : "text-gray-700"
+                            }`}>{difficulty}
                             </Text>
                         </View>
                         <View className="bg-blue-100 px-2.5 py-1 mr-2 rounded-full">

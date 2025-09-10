@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useState, ReactNode, useEffect } from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage"; // optional persistence
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 // -------------------- Types --------------------
 type Recipe = {
     id: string;
@@ -30,7 +29,7 @@ type RecipeContextType = {
 // -------------------- Context --------------------
 const RecipeContext = createContext<RecipeContextType | undefined>(undefined);
 
-const STORAGE_KEY = "saved_recipe_ids_v1";
+const STORAGE_KEY = "'savedRecipes'";
 
 // your mock data
 const INITIAL_RECIPES: Recipe[] = [

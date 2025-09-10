@@ -1,5 +1,5 @@
 // app/recipe/[id].tsx
-import { View, Text, Image, ScrollView, TouchableOpacity} from "react-native";
+import {View, Text, Image, ScrollView, TouchableOpacity, FlatList} from "react-native";
 import { useLocalSearchParams, Stack, useRouter } from "expo-router";
 import { useRecipes } from "@/contexts/RecipeContext";
 
@@ -27,10 +27,13 @@ export default function RecipeDetails() {
             {/* Optional native header title */}
             <Stack.Screen options={{ title: recipe.title }} />
 
-            <ScrollView className="flex-1 bg-primary-bg" contentContainerStyle={{ padding: 16 }}>
+            <ScrollView
+                className="flex-1 bg-primary-bg p-4"
+                contentContainerStyle={{ padding: 16 }}
+            >
                 {/* Hero / image */}
                 {recipe.image ? (
-                    <Image source={{ uri: recipe.image }} className="w-full h-full rounded-xl mb-4" />
+                    <Image source={{ uri: recipe.image }} className="w-full h-80 rounded-xl mb-4" /> //do not make h-full! scrollview problems!
                 ) : (
                     <View className="w-full h-56 rounded-xl mb-4 bg-gray-200" />
                 )}
@@ -74,36 +77,35 @@ export default function RecipeDetails() {
                 ) : (
                     <Text className="text-gray-600">No steps provided.</Text>
                 )}
-            </ScrollView>
 
-            {/* Footer actions */}
-            <View className="px-4 pb-8 bg-primary-bg">
-                <View className="flex-row gap-3">
-                    {/* SAVE / UNSAVE */}
-                    <TouchableOpacity
-                        onPress={() => toggleSave(id!)}
-                        accessibilityRole="button"
-                        accessibilityLabel={saved ? "Unsave recipe" : "Save recipe"}
-                        className={`flex-1 py-3 rounded-lg items-center ${
-                            saved ? "bg-gray-200" : "bg-[#1B57BF]"
-                        }`}
-                    >
-                        <Text className={`text-lg font-bold ${saved ? "text-gray-900" : "text-white"}`}>
-                            {saved ? "Saved ✓" : "Save"}
-                        </Text>
-                    </TouchableOpacity>
+                <View className="px-4 pb-8 pt-4 bg-primary-bg">
+                    <View className="flex-row gap-3">
+                        {/* SAVE / UNSAVE */}
+                        <TouchableOpacity
+                            onPress={() => toggleSave(id!)}
+                            accessibilityRole="button"
+                            accessibilityLabel={saved ? "Unsave recipe" : "Save recipe"}
+                            className={`flex-1 py-3 rounded-lg items-center ${
+                                saved ? "bg-gray-200" : "bg-[#1B57BF]"
+                            }`}
+                        >
+                            <Text className={`text-lg font-bold ${saved ? "text-gray-900" : "text-white"}`}>
+                                {saved ? "Saved ✓" : "Save"}
+                            </Text>
+                        </TouchableOpacity>
 
-                    {/* BACK */}
-                    <TouchableOpacity
-                        onPress={() => router.back()}
-                        accessibilityRole="button"
-                        accessibilityLabel="Go back"
-                        className="flex-1 bg-gray-900 py-3 rounded-lg items-center"
-                    >
-                        <Text className="text-white text-lg font-bold">Back</Text>
-                    </TouchableOpacity>
+                        {/* BACK */}
+                        <TouchableOpacity
+                            onPress={() => router.back()}
+                            accessibilityRole="button"
+                            accessibilityLabel="Go back"
+                            className="flex-1 bg-gray-900 py-3 rounded-lg items-center"
+                        >
+                            <Text className="text-white text-lg font-bold">Back</Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
-            </View>
+            </ScrollView>
         </>
     );
 }

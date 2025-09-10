@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "DishSwap",
-    "slug": "DishSwap",
+    "slug": "dishSwap",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/logos/DishSwap.png",
